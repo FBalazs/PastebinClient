@@ -56,8 +56,16 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit2_version"
-    implementation "com.squareup.retrofit2:converter-simplexml:$retrofit2_version"
-    implementation "org.simpleframework:simple-xml:$simplexml_version"
+    implementation ("com.squareup.retrofit2:converter-simplexml:$retrofit2_version") {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'xpp3', module: 'xpp3'
+    }
+    implementation ("org.simpleframework:simple-xml:$simplexml_version") {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'xpp3', module: 'xpp3'
+    }
 
     implementation "org.greenrobot:eventbus:$eventbus_version"
 }
