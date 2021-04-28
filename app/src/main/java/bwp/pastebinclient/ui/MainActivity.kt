@@ -2,10 +2,10 @@ package bwp.pastebinclient.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import bwp.pastebinclient.R
 import bwp.pastebinclient.injector
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), PasteScreen {
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), PasteScreen {
     }
 
     override fun showPaste(rawPaste: String) {
-        findViewById<TextView>(R.id.tvHelloWorld).text = rawPaste
+        tvHelloWorld.text = rawPaste
     }
 
     override fun showNetworkError(errorMsg: String) {
