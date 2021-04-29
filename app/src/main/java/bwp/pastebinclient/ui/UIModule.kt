@@ -2,6 +2,8 @@ package bwp.pastebinclient.ui
 
 import android.content.Context
 import bwp.pastebinclient.interactor.PastesInteractor
+import bwp.pastebinclient.ui.details.PasteDetailsPresenter
+import bwp.pastebinclient.ui.list.PastesListPresenter
 import dagger.Module
 import dagger.Provides
 import java.util.concurrent.Executor
@@ -16,11 +18,11 @@ class UIModule(private val context: Context) {
 
     @Provides
     @Singleton
-    fun pastesListPresenter() = PastesListPresenter()
+    fun pastesListPresenter(executor: Executor, pastesInteractor: PastesInteractor) = PastesListPresenter(executor, pastesInteractor)
 
     @Provides
     @Singleton
-    fun pastePresenter(executor: Executor, pastesInteractor: PastesInteractor) = PastePresenter(executor, pastesInteractor)
+    fun pasteDetailsPresenter(executor: Executor, pastesInteractor: PastesInteractor) = PasteDetailsPresenter(executor, pastesInteractor)
 
     @Provides
     @Singleton

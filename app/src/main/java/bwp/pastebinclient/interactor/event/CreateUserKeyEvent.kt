@@ -1,7 +1,7 @@
 package bwp.pastebinclient.interactor.event
 
-data class GetRawPasteEvent(
+data class CreateUserKeyEvent(
     var code: Int = 0,
-    var rawPasteCode: String? = null,
+    var userKey: String? = null,
     var throwable: Throwable? = null
 )

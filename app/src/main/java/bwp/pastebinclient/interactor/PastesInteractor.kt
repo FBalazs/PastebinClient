@@ -10,7 +10,7 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
 
     val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
 
-    fun getRawPublicPaste(pasteKey: String) {
+    fun getPublicRawPasteCode(pasteKey: String) {
         val event = GetRawPasteEvent()
 
         try {
@@ -26,5 +26,13 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
             event.throwable = e
             EventBus.getDefault().post(event)
         }
+    }
+
+    fun createUserKey(username: String, password: String) {
+
+    }
+
+    fun getUserPastes(userKey: String) {
+
     }
 }

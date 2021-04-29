@@ -1,19 +1,19 @@
-package bwp.pastebinclient.ui
+package bwp.pastebinclient.ui.details
 
 import bwp.pastebinclient.interactor.PastesInteractor
 import bwp.pastebinclient.interactor.event.GetRawPasteEvent
-import bwp.pastebinclient.model.PasteInfo
+import bwp.pastebinclient.ui.Presenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.Executor
 import javax.inject.Inject
 
-class PastePresenter @Inject constructor(
+class PasteDetailsPresenter @Inject constructor(
         private val executor: Executor,
-        private val pastesInteractor: PastesInteractor) : Presenter<PasteScreen>() {
+        private val pastesInteractor: PastesInteractor) : Presenter<PasteDetailsScreen>() {
 
-    override fun attachScreen(screen: PasteScreen) {
+    override fun attachScreen(screen: PasteDetailsScreen) {
         super.attachScreen(screen)
         EventBus.getDefault().register(this)
     }
@@ -25,7 +25,7 @@ class PastePresenter @Inject constructor(
 
     fun showPaste(pasteKey: String) {
         executor.execute {
-            pastesInteractor.getRawPublicPaste(pasteKey)
+            pastesInteractor.getPublicRawPasteCode(pasteKey)
         }
     }
 
