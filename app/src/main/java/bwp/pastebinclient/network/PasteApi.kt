@@ -1,6 +1,5 @@
 package bwp.pastebinclient.network
 
-import bwp.pastebinclient.model.PasteInfo
 import bwp.pastebinclient.model.UserInfo
 import retrofit2.Call
 import retrofit2.http.*
@@ -23,7 +22,7 @@ interface PasteApi {
     fun listUserPastes(@Field("api_dev_key") apiDevKey: String,
                        @Field("api_user_key") userKey: String,
                        @Field("api_results_limit") apiResultsLimit: Int? = null,
-                       @Field("api_option") apiOption: String = "list"): Call<List<PasteInfo>>
+                       @Field("api_option") apiOption: String = "list"): Call<String>
 
     @POST("api/api_post.php")
     @FormUrlEncoded

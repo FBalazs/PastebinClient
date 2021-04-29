@@ -31,7 +31,8 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
         injector.inject(this)
         pastesListPresenter.attachScreen(this)
 
-        pastesListPresenter.showOnlyLocalPastes() // TODO remove temp call
+//        pastesListPresenter.showOnlyLocalPastes() // TODO remove temp call
+        pastesListPresenter.showOnlyUserPastes("<insert your user key here>")
     }
 
     override fun onStop() {
