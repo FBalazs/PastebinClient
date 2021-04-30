@@ -1,5 +1,6 @@
 package bwp.pastebinclient.ui.list
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +11,7 @@ import bwp.pastebinclient.R
 import bwp.pastebinclient.databinding.ActivityPasteListBinding
 import bwp.pastebinclient.databinding.LoginDialogBinding
 import bwp.pastebinclient.injector
+import bwp.pastebinclient.interactor.Constants
 import bwp.pastebinclient.model.PasteInfo
 import javax.inject.Inject
 
@@ -41,9 +43,11 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
     override fun onStart() {
         super.onStart()
         injector.inject(this)
-        pastesListPresenter.attachScreen(this)
 
-        pastesListPresenter.showOnlyLocalPastes() // TODO remove temp call
+        userKey = getPreferences(Context.MODE_PRIVATE).getString(Constants.PREF_USER_KEY, null)
+
+        pastesListPresenter.attachScreen(this)
+        pastesListPresenter.showPastes(userKey)
     }
 
     override fun onStop() {
@@ -95,11 +99,14 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
     private fun clickLogout() {
         userKey = null
+        getPreferences(Context.MODE_PRIVATE).edit().remove(Constants.PREF_USER_KEY).apply()
+        pastesListPresenter.showPastes(userKey)
     }
 
     override fun loginSuccess(userKey: String) {
         this.userKey = userKey
-        pastesListPresenter.showOnlyUserPastes(userKey)
+        getPreferences(Context.MODE_PRIVATE).edit().putString(Constants.PREF_USER_KEY, userKey).apply()
+        pastesListPresenter.showPastes(userKey)
     }
 
     override fun loginFailed(errorMsg: String) {

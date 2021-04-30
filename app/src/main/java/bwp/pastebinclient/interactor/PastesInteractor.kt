@@ -50,19 +50,21 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
         }
     }
 
-    fun getUserPastes(userKey: String) {
+    fun getPastes(userKey: String?) {
         val event = GetPastesEvent()
 
         try {
-            val call = pasteApi.listUserPastes(API_DEV_KEY, userKey)
-            val response = call.execute()
-            event.code = response.code()
-            if (response.code() != 200) {
-                throw Exception("Response code is not OK: ${response.code()} != 200")
+            if (userKey != null) {
+                val call = pasteApi.listUserPastes(API_DEV_KEY, userKey)
+                val response = call.execute()
+                event.code = response.code()
+                if (response.code() != 200) {
+                    throw Exception("Response code is not OK: ${response.code()} != 200")
+                }
+                val xmlString = "<pastes>${response.body()}</pastes>"
+                val serializer = Persister()
+                event.pastes = serializer.read(PasteList::class.java, xmlString).pastes
             }
-            val xmlString = "<pastes>${response.body()}</pastes>"
-            val serializer = Persister()
-            event.pastes = serializer.read(PasteList::class.java, xmlString).pastes
             EventBus.getDefault().post(event)
         } catch (e: Exception) {
             event.throwable = e

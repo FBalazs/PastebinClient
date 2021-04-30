@@ -3,7 +3,6 @@ package bwp.pastebinclient.ui.list
 import bwp.pastebinclient.interactor.PastesInteractor
 import bwp.pastebinclient.interactor.event.CreateUserKeyEvent
 import bwp.pastebinclient.interactor.event.GetPastesEvent
-import bwp.pastebinclient.model.PasteInfo
 import bwp.pastebinclient.ui.Presenter
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -25,29 +24,11 @@ class PastesListPresenter @Inject constructor(
         super.detachScreen()
     }
 
-    fun showOnlyLocalPastes() {
-        val pastes = ArrayList<PasteInfo>()
-        for (i in 1..20) {
-            pastes.add(PasteInfo(
-                "key_$i",
-                "https://pastebin.com/key_$i",
-                "Paste $i",
-                System.currentTimeMillis(),
-                System.currentTimeMillis() + 1000*60*60*24,
-                0,
-                1000,
-                "Kotlin",
-                "kotlin",
-                10
-            ))
-        }
-
-        screen?.showPastes(pastes) // TODO implement local data
-    }
-
-    fun showOnlyUserPastes(userKey: String) {
-        executor.execute {
-            pastesInteractor.getUserPastes(userKey)
+    fun showPastes(userKey: String?) {
+        if (userKey != null) {
+            executor.execute {
+                pastesInteractor.getPastes(userKey)
+            }
         }
     }
 
