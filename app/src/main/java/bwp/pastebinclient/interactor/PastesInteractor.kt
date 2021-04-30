@@ -1,5 +1,6 @@
 package bwp.pastebinclient.interactor
 
+import bwp.pastebinclient.interactor.event.CreateUserKeyEvent
 import bwp.pastebinclient.interactor.event.GetPastesEvent
 import bwp.pastebinclient.interactor.event.GetRawPasteEvent
 import bwp.pastebinclient.model.PasteList
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
 
-    val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
+    private val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
 
     fun getPublicRawPasteCode(pasteKey: String) {
         val event = GetRawPasteEvent()
@@ -32,7 +33,21 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
     }
 
     fun createUserKey(username: String, password: String) {
+        val event = CreateUserKeyEvent()
 
+        try {
+            val call = pasteApi.createUserKey(API_DEV_KEY, username, password)
+            val response = call.execute()
+            event.code = response.code()
+            if (response.code() != 200) {
+                throw Exception("Response code is not OK: ${response.code()} != 200")
+            }
+            event.userKey = response.body()
+            EventBus.getDefault().post(event)
+        } catch (e: Exception) {
+            event.throwable = e
+            EventBus.getDefault().post(event)
+        }
     }
 
     fun getUserPastes(userKey: String) {

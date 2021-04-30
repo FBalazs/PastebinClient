@@ -1,6 +1,7 @@
 package bwp.pastebinclient.ui.list
 
 import bwp.pastebinclient.interactor.PastesInteractor
+import bwp.pastebinclient.interactor.event.CreateUserKeyEvent
 import bwp.pastebinclient.interactor.event.GetPastesEvent
 import bwp.pastebinclient.model.PasteInfo
 import bwp.pastebinclient.ui.Presenter
@@ -51,16 +52,38 @@ class PastesListPresenter @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: GetPastesEvent) {
+    fun onGetPastesEvent(event: GetPastesEvent) {
         if (event.throwable != null) {
             event.throwable?.printStackTrace()
             if (screen != null) {
-                screen?.showNetworkError(event.throwable?.message.orEmpty())
+                screen?.showPastesFailed(event.throwable?.message.orEmpty())
             }
         } else {
             if (screen != null) {
                 if (event.pastes != null) {
                     screen?.showPastes(event.pastes)
+                }
+            }
+        }
+    }
+
+    fun login(username: String, password: String) {
+        executor.execute {
+            pastesInteractor.createUserKey(username, password)
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onCreateUserKeyEvent(event: CreateUserKeyEvent) {
+        if (event.throwable != null) {
+            event.throwable?.printStackTrace()
+            if (screen != null) {
+                screen?.loginFailed(event.throwable?.message.orEmpty())
+            }
+        } else {
+            if (screen != null) {
+                if (event.userKey != null) {
+                    screen?.loginSuccess(event.userKey.orEmpty())
                 }
             }
         }

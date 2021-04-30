@@ -5,22 +5,22 @@ import org.simpleframework.xml.Root
 
 @Root(name = "user")
 data class UserInfo(
-    @Element(name = "user_name")
-    val name: String,
-    @Element(name = "user_format_short")
-    val defaultFormatShort: String,
-    @Element(name = "user_expiration")
-    val defaultExpiration: String,
-    @Element(name = "user_avatar_url")
-    val avatarUrl: String,
-    @Element(name = "user_private")
-    val defaultPrivate: Int,
-    @Element(name = "user_website")
-    val website: String,
-    @Element(name = "user_email")
-    val email: String,
-    @Element(name = "user_location")
-    val location: String,
-    @Element(name = "user_account_type")
-    val accountType: Int
+    @field:Element(name = "user_name")
+    var name: String = "",
+    @field:Element(name = "user_format_short")
+    var defaultFormatShort: String = "",
+    @field:Element(name = "user_expiration")
+    var defaultExpiration: String = "",
+    @field:Element(name = "user_avatar_url")
+    var avatarUrl: String = "",
+    @field:Element(name = "user_private")
+    var defaultPrivate: Int = 0,
+    @field:Element(name = "user_website")
+    var website: String = "",
+    @field:Element(name = "user_email")
+    var email: String = "",
+    @field:Element(name = "user_location")
+    var location: String = "",
+    @field:Element(name = "user_account_type")
+    var accountType: Int = 0
 )

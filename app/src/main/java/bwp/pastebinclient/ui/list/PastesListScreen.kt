@@ -4,5 +4,8 @@ import bwp.pastebinclient.model.PasteInfo
 
 interface PastesListScreen {
     fun showPastes(pastes: List<PasteInfo>?)
-    fun showNetworkError(errorMsg: String)
+    fun showPastesFailed(errorMsg: String)
+
+    fun loginSuccess(userKey: String)
+    fun loginFailed(errorMsg: String)
 }

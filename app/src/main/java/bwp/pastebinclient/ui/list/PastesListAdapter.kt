@@ -12,7 +12,7 @@ import java.util.*
 
 class PastesListAdapter(private val onClickItem: (PasteInfo) -> Unit) : ListAdapter<PasteInfo, PastesListAdapter.ViewHolder>(PasteInfoDiffCallback) {
 
-    class ViewHolder(val binding: PasteListItemBinding, private val onClick: (PasteInfo) -> Unit) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: PasteListItemBinding, private val onClick: (PasteInfo) -> Unit) : RecyclerView.ViewHolder(binding.root) {
         private var currentPasteInfo: PasteInfo? = null
 
         init {
@@ -25,8 +25,8 @@ class PastesListAdapter(private val onClickItem: (PasteInfo) -> Unit) : ListAdap
             currentPasteInfo = pasteInfo
 
             binding.tvPasteTitle.text = pasteInfo.title
-            binding.tvCreatedAt.text = DateFormat.getDateTimeInstance().format(Date(pasteInfo.date))
-            binding.tvExpiresIn.text = "Expires at ${DateFormat.getDateTimeInstance().format(Date(pasteInfo.expireDate))}"
+            binding.tvCreatedAt.text = DateFormat.getDateTimeInstance().format(Date(pasteInfo.date * 1000))
+            binding.tvExpiresIn.text = "Expires at ${DateFormat.getDateTimeInstance().format(Date(pasteInfo.expireDate * 1000))}"
         }
     }
 

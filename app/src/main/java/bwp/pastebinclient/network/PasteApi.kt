@@ -46,4 +46,10 @@ interface PasteApi {
 
     @GET("raw/{key}")
     fun getRawPublicPaste(@Path("key") pasteKey: String): Call<String>
+
+    @POST("api/api_login.php")
+    @FormUrlEncoded
+    fun createUserKey(@Field("api_dev_key") apiDevKey: String,
+                      @Field("api_user_name") username: String,
+                      @Field("api_user_password") password: String): Call<String>
 }
