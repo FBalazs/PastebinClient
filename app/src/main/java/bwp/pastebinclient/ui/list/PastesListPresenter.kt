@@ -25,10 +25,8 @@ class PastesListPresenter @Inject constructor(
     }
 
     fun showPastes(userKey: String?) {
-        if (userKey != null) {
-            executor.execute {
-                pastesInteractor.getPastes(userKey)
-            }
+        executor.execute {
+            pastesInteractor.getPastes(userKey)
         }
     }
 

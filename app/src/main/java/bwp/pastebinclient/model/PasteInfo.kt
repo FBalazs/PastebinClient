@@ -2,6 +2,7 @@ package bwp.pastebinclient.model
 
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
+import java.io.Serializable
 
 @Root(name = "paste")
 data class PasteInfo(
@@ -25,7 +26,7 @@ data class PasteInfo(
     var formatShort: String = "",
     @field:Element(name = "paste_hits")
     var hits: Long = 0
-) {
+) : Serializable {
 
     val isPrivate: Boolean = private == 2
 }

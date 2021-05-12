@@ -3,6 +3,7 @@ package bwp.pastebinclient.interactor
 import bwp.pastebinclient.interactor.event.CreateUserKeyEvent
 import bwp.pastebinclient.interactor.event.GetPastesEvent
 import bwp.pastebinclient.interactor.event.GetRawPasteEvent
+import bwp.pastebinclient.model.PasteInfo
 import bwp.pastebinclient.model.PasteList
 import bwp.pastebinclient.network.PasteApi
 import org.greenrobot.eventbus.EventBus
@@ -12,7 +13,9 @@ import javax.inject.Inject
 
 class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
 
-    private val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
+    companion object {
+        const val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
+    }
 
     fun getPublicRawPasteCode(pasteKey: String) {
         val event = GetRawPasteEvent()
@@ -64,6 +67,15 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
                 val xmlString = "<pastes>${response.body()}</pastes>"
                 val serializer = Persister()
                 event.pastes = serializer.read(PasteList::class.java, xmlString).pastes
+            } else {
+                // TODO implement
+                event.code = 200
+                event.pastes = listOf(
+                        PasteInfo(
+                                "wf31x4Gr",
+                                "https://pastebin.com/wf31x4Gr",
+                                "II/19")
+                )
             }
             EventBus.getDefault().post(event)
         } catch (e: Exception) {
