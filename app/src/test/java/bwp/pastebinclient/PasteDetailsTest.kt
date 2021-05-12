@@ -9,9 +9,10 @@ import bwp.pastebinclient.utils.mock
 import org.junit.After
 import org.junit.Test
 
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
 
 
@@ -33,6 +34,6 @@ class PasteDetailsTest {
 
     @Test
     fun testDetails() {
-        fail("not implemented")
+
     }
 }
