@@ -1,8 +1,8 @@
 package bwp.pastebinclient.ui.list
 
+import android.R.id
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -10,15 +10,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import bwp.pastebinclient.Constants
 import bwp.pastebinclient.R
 import bwp.pastebinclient.databinding.ActivityPasteListBinding
 import bwp.pastebinclient.databinding.LoginDialogBinding
 import bwp.pastebinclient.injector
-import bwp.pastebinclient.Constants
 import bwp.pastebinclient.model.PasteInfo
 import bwp.pastebinclient.ui.create.PasteCreateActivity
 import bwp.pastebinclient.ui.details.PasteDetailsActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
+
 
 class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
@@ -35,9 +38,12 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
     private var userKey: String? = null
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
         binding = ActivityPasteListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -85,6 +91,13 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
     private fun pasteOnClick(pasteInfo: PasteInfo) {
         Log.d(TAG, "pasteOnClick")
+
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, pasteInfo.key)
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, pasteInfo.title)
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "paste")
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+
         val intent = Intent(this, PasteDetailsActivity::class.java).apply {
             putExtra(Constants.EXTRA_USER_KEY, userKey)
             putExtra(Constants.EXTRA_PASTE_INFO, pasteInfo)
@@ -115,8 +128,9 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
         val dialogBinding = LoginDialogBinding.inflate(layoutInflater)
         val loginActionListener = {
             pastesListPresenter.login(
-                    dialogBinding.etUsername.text.toString(),
-                    dialogBinding.etPassword.text.toString())
+                dialogBinding.etUsername.text.toString(),
+                dialogBinding.etPassword.text.toString()
+            )
         }
         dialogBinding.etUsername.requestFocus()
         val alertDialog = AlertDialog.Builder(this)
@@ -141,6 +155,11 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
     override fun loginSuccess(userKey: String) {
         Log.d(TAG, "loginSuccess")
+
+        val bundle = Bundle()
+        bundle.putLong(FirebaseAnalytics.Param.SUCCESS, 1)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
+
         this.userKey = userKey
         pastesListPresenter.showPastes(userKey)
         getPreferences(Context.MODE_PRIVATE).edit().putString(Constants.PREF_USER_KEY, userKey).apply()
@@ -148,6 +167,11 @@ class PastesListActivity : AppCompatActivity(), PastesListScreen {
 
     override fun loginFailed(errorMsg: String) {
         Log.d(TAG, "loginFailed")
+
+        val bundle = Bundle()
+        bundle.putLong(FirebaseAnalytics.Param.SUCCESS, 0)
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
+
         Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
     }
 }
