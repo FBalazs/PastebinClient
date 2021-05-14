@@ -1,35 +1,30 @@
 language: android
 android:
   components:
-    - build-tools-29.0.3
-    - android-29
-    - android-21
-    - add-on
-    - extra
-    - platform-tools
-    - tools
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-29
-    - sys-img-armeabi-v7a-android-21
-
+  - build-tools-29.0.3
+  - android-29
+  - android-21
+  - add-on
+  - extra
+  - platform-tools
+  - tools
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-29
+  - sys-img-armeabi-v7a-android-21
 env:
   global:
-    # Add this
-    - MALLOC_ARENA_MAX=2
-
+  - MALLOC_ARENA_MAX=2
+  - secure: fthzlmdRESvwFHGE9jq9EBej/AVgdBADxRhmLf+6m/UfxRPKOHct0UJe5197rwaiU2mYk4lWhjR8D47ieA15iNhNZSWu1/6dY1rTSp0CgOHbltBys6KHBhdillebGYreLUW8Kf7rbMzPj1Rn3poJskTkOc3/U6Zryfq2mC+yd5DSA1yiyQl4BpU19gowEzdCEpQeRPN1l3Oo5KhKoWhSM1MrByGAns016f1TaEsUQBPP/iWzU/fuggcEd/CM8zSYrI7jICmB1cFnQ1KOb4SdEZocCUQudspc2YnSvVLjXmIeUJadfrtAhMmT8s2S9CDJz6c2E0uGkg96LUWMNmryKeIslCLkscKGe12P416mCmVZiCfhrbpBQePjFyRq0Qr63YgDvWzPvWpf+p/20cHFI48RynUOzBP80DSaAJEjqjLZTbefaLtHMNL8+VJU/41INzFK50olGIm6HWexHq9rX+aHCzZyqREkRtc0mbp0gZQe2YfhbFOvHFK5631HrnPqRgjHR4vQQHfkBWStvDF7OqixILj35FCS3N/j8/+9FcXo7GLNu/yiwSmLAH/Al9yyr8WyKfweIoS1IrAS93MIuaz7R2m7C0ZvEhE2TslBbhGcQ9YmcLe6hiG2A1dkOzARWaUt4M/feAYjcrsA/B5bIVf7ffR1PhYMHiAwEHY3PuQ=
 sudo: required
-
 before_install:
-  - openssl aes-256-cbc -K $encrypted_f761570c4ae9_key -iv $encrypted_f761570c4ae9_iv -in app/google-services.json.enc -out app/google-services.json -d
-  - yes | sdkmanager "platforms;android-29"
-
+- echo $google_services_json_password | gpg --passphrase-fd 0 app/google-services.json.gpg
+- yes | sdkmanager "platforms;android-29"
 before_script:
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a -s "768x1280"
-  - emulator -avd test -no-audio -no-window &
-  - adb wait-for-device
-  - adb shell input keyevent 82 &
-
-script: ./gradlew :app:build :app:connectedDebugAndroidTest
+- echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a -s
+  "768x1280"
+- emulator -avd test -no-audio -no-window &
+- adb wait-for-device
+- adb shell input keyevent 82 &
+script: "./gradlew :app:build :app:connectedDebugAndroidTest"
