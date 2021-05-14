@@ -1,6 +1,7 @@
 package bwp.pastebinclient.ui.details
 
 import bwp.pastebinclient.interactor.PastesInteractor
+import bwp.pastebinclient.interactor.event.DeletePasteEvent
 import bwp.pastebinclient.interactor.event.GetRawPasteEvent
 import bwp.pastebinclient.ui.Presenter
 import org.greenrobot.eventbus.EventBus
@@ -25,13 +26,17 @@ class PasteDetailsPresenter @Inject constructor(
 
     fun showPaste(pasteKey: String, userKey: String?) {
         executor.execute {
-            pastesInteractor.getPublicRawPasteCode(pasteKey)
+            if (userKey != null) {
+                pastesInteractor.getRawPasteCode(pasteKey, userKey)
+            } else {
+                pastesInteractor.getPublicRawPasteCode(pasteKey)
+            }
         }
     }
 
     fun deletePaste(pasteKey: String, userKey: String) {
         executor.execute {
-//            pastesInteractor.deletePaste(pasteKey)
+            pastesInteractor.deletePaste(pasteKey, userKey)
         }
     }
 
@@ -40,13 +45,27 @@ class PasteDetailsPresenter @Inject constructor(
         if (event.throwable != null) {
             event.throwable?.printStackTrace()
             if (screen != null) {
-                screen?.showNetworkError(event.throwable?.message.orEmpty())
+                screen?.showNetworkError(event.throwable)
             }
         } else {
             if (screen != null) {
                 if (event.rawPasteCode != null) {
                     screen?.showPaste(event.rawPasteCode.orEmpty())
                 }
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: DeletePasteEvent) {
+        if (event.throwable != null) {
+            event.throwable?.printStackTrace()
+            if (screen != null) {
+                screen?.deleteFailed(event.throwable)
+            }
+        } else {
+            if (screen != null) {
+                screen?.deleteSuccess()
             }
         }
     }

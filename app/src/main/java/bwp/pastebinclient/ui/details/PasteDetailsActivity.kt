@@ -127,16 +127,23 @@ class PasteDetailsActivity : AppCompatActivity(), PasteDetailsScreen {
             .setPositiveButton(R.string.yes) { dialog, which ->
                 pasteDetailsPresenter.deletePaste(pasteInfo?.key.orEmpty(), userKey.orEmpty())
             }
-            .setNegativeButton(R.string.no) { dialog, which ->
-
-            }.show()
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .show()
     }
 
     override fun showPaste(rawPaste: String) {
         binding.tvCode.text = rawPaste
     }
 
-    override fun showNetworkError(errorMsg: String) {
-        Toast.makeText(this, "Network error: $errorMsg", Toast.LENGTH_LONG).show()
+    override fun showNetworkError(error: Throwable?) {
+        Toast.makeText(this, "Network error: ${error?.message}", Toast.LENGTH_LONG).show()
+    }
+
+    override fun deleteSuccess() {
+        onBackPressed()
+    }
+
+    override fun deleteFailed(error: Throwable?) {
+        Toast.makeText(this, "Deletion failed: ${error?.message}", Toast.LENGTH_LONG).show()
     }
 }
