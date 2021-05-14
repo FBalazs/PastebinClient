@@ -23,9 +23,15 @@ class PasteDetailsPresenter @Inject constructor(
         super.detachScreen()
     }
 
-    fun showPaste(pasteKey: String) {
+    fun showPaste(pasteKey: String, userKey: String?) {
         executor.execute {
             pastesInteractor.getPublicRawPasteCode(pasteKey)
+        }
+    }
+
+    fun deletePaste(pasteKey: String, userKey: String) {
+        executor.execute {
+//            pastesInteractor.deletePaste(pasteKey)
         }
     }
 

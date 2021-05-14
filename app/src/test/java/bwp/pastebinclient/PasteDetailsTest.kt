@@ -34,6 +34,7 @@ class PasteDetailsTest {
 
     @Test
     fun testDetails() {
-
+        detailsPresenter.showPaste("key")
+        verify(detailsScreen).showPaste(ArgumentMatchers.any())
     }
 }

@@ -1,11 +1,15 @@
 package bwp.pastebinclient.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import org.simpleframework.xml.Element
 import org.simpleframework.xml.Root
 import java.io.Serializable
 
+@Entity(tableName = "paste")
 @Root(name = "paste")
 data class PasteInfo(
+    @PrimaryKey
     @field:Element(name = "paste_key")
     var key: String = "",
     @field:Element(name = "paste_url")
@@ -26,7 +30,4 @@ data class PasteInfo(
     var formatShort: String = "",
     @field:Element(name = "paste_hits")
     var hits: Long = 0
-) : Serializable {
-
-    val isPrivate: Boolean = private == 2
-}
+) : Serializable

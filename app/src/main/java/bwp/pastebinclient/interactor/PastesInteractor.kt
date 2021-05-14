@@ -17,24 +17,6 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
         const val API_DEV_KEY = "8d848649139a71e536a2df7b8883a23a"
     }
 
-    fun getPublicRawPasteCode(pasteKey: String) {
-        val event = GetRawPasteEvent()
-
-        try {
-            val call = pasteApi.getRawPublicPaste(pasteKey)
-            val response = call.execute()
-            event.code = response.code()
-            if (response.code() != 200) {
-                throw Exception("Response code is not OK: ${response.code()} != 200")
-            }
-            event.rawPasteCode = response.body()
-            EventBus.getDefault().post(event)
-        } catch (e: Exception) {
-            event.throwable = e
-            EventBus.getDefault().post(event)
-        }
-    }
-
     fun createUserKey(username: String, password: String) {
         val event = CreateUserKeyEvent()
 
@@ -42,10 +24,28 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
             val call = pasteApi.createUserKey(API_DEV_KEY, username, password)
             val response = call.execute()
             event.code = response.code()
-            if (response.code() != 200) {
-                throw Exception("Response code is not OK: ${response.code()} != 200")
+            if (!response.isSuccessful) {
+                throw ResponseException(response.code(), response.message(), response.errorBody().toString())
             }
             event.userKey = response.body()
+            EventBus.getDefault().post(event)
+        } catch (e: Exception) {
+            event.throwable = e
+            EventBus.getDefault().post(event)
+        }
+    }
+
+    fun getPublicRawPasteCode(pasteKey: String) {
+        val event = GetRawPasteEvent()
+
+        try {
+            val call = pasteApi.getRawPublicPaste(pasteKey)
+            val response = call.execute()
+            event.code = response.code()
+            if (!response.isSuccessful) {
+                throw ResponseException(response.code(), response.message(), response.errorBody().toString())
+            }
+            event.rawPasteCode = response.body()
             EventBus.getDefault().post(event)
         } catch (e: Exception) {
             event.throwable = e
@@ -68,14 +68,8 @@ class PastesInteractor @Inject constructor(private val pasteApi: PasteApi) {
                 val serializer = Persister()
                 event.pastes = serializer.read(PasteList::class.java, xmlString).pastes
             } else {
-                // TODO implement
                 event.code = 200
-                event.pastes = listOf(
-                        PasteInfo(
-                                "wf31x4Gr",
-                                "https://pastebin.com/wf31x4Gr",
-                                "II/19")
-                )
+                event.pastes = listOf()
             }
             EventBus.getDefault().post(event)
         } catch (e: Exception) {

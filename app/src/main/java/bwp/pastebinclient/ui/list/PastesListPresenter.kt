@@ -35,7 +35,7 @@ class PastesListPresenter @Inject constructor(
         if (event.throwable != null) {
             event.throwable?.printStackTrace()
             if (screen != null) {
-                screen?.showPastesFailed(event.throwable?.message.orEmpty())
+                screen?.showPastesFailed(event.throwable)
             }
         } else {
             if (screen != null) {
@@ -57,7 +57,7 @@ class PastesListPresenter @Inject constructor(
         if (event.throwable != null) {
             event.throwable?.printStackTrace()
             if (screen != null) {
-                screen?.loginFailed(event.throwable?.message.orEmpty())
+                screen?.loginFailed(event.throwable)
             }
         } else {
             if (screen != null) {

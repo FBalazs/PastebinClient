@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import bwp.pastebinclient.R
 import bwp.pastebinclient.databinding.PasteListItemBinding
 import bwp.pastebinclient.model.PasteInfo
 import java.text.DateFormat
@@ -26,7 +27,9 @@ class PastesListAdapter(private val onClickItem: (PasteInfo) -> Unit) : ListAdap
 
             binding.tvPasteTitle.text = pasteInfo.title
             binding.tvCreatedAt.text = DateFormat.getDateTimeInstance().format(Date(pasteInfo.date * 1000))
-            binding.tvExpiresIn.text = "Expires at ${DateFormat.getDateTimeInstance().format(Date(pasteInfo.expireDate * 1000))}"
+            binding.tvExpiresIn.text = binding.root.context.getString(
+                R.string.expires_at,
+                if (pasteInfo.expireDate == 0L) "Never" else DateFormat.getDateTimeInstance().format(Date(pasteInfo.expireDate * 1000)))
         }
     }
 
