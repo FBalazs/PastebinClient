@@ -57,25 +57,32 @@
             android:id="@+id/rbPrivacyPublic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="Public" />
     </RadioGroup>
 
-    <Spinner
-        android:id="@+id/spinnerPasteFormat"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etExpireString"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Expire string (N, 10M, 1H...)"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rgPrivacy" />
 
-    <Spinner
-        android:id="@+id/spinnerPasteExpiration"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/etShortFormat"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="short format (e.g. java)"
+        android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerPasteFormat" />
+        app:layout_constraintTop_toBottomOf="@+id/etExpireString" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

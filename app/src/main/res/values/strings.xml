@@ -15,4 +15,6 @@
     <string name="expires_at">Expires at: %s</string>
     <string name="url">Url: %s</string>
     <string name="privacy">Privacy: %s</string>
+    <string name="create">Create</string>
+    <string name="publish">Publish</string>
 </resources>
